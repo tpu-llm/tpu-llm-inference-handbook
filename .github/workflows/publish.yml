@@ -17,6 +17,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # --- Add this step to configure Git identity ---
+      - name: Set up Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      # ------------------------------------------------
+
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
