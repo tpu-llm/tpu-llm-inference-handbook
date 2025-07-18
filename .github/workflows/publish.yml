@@ -3,7 +3,7 @@ name: Publish Quarto Book
 on:
   push:
     branches:
-      - gh-pages # Or whatever your source branch is
+      - main # Or whatever your source branch is
 
 jobs:
   build-and-deploy:
