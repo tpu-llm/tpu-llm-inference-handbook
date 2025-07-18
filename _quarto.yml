@@ -3,7 +3,7 @@ project:
 
 book:
   title: "tpu-llm-inference-handbook"
-  author: "Norah Jones"
+  author: "Gang Chen"
   date: "7/18/2025"
   chapters:
     - index.qmd
