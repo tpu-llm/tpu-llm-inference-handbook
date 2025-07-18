@@ -1,0 +1,29 @@
+name: Publish Quarto Book
+
+on:
+  push:
+    branches:
+      - gh-pages # Or whatever your source branch is
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push the rendered output to gh-pages or main
+      pages: write # Needed for GitHub Pages
+      id-token: write # Needed for OIDC if using it
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      # If you use Python code blocks, install dependencies
+      - name: Install Python dependencies
+        run: |
+          python -m pip install -r requirements.txt # If you have a requirements.txt
+
+      - name: Render and Publish Quarto book
+        run: quarto publish gh-pages --no-prompt # Publishes to the gh-pages branch
