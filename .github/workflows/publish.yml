@@ -19,6 +19,8 @@ jobs:
 
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true # This line tells the action to install TinyTeX
 
       # If you use Python code blocks, install dependencies
       #- name: Install Python dependencies
