@@ -21,9 +21,9 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       # If you use Python code blocks, install dependencies
-      - name: Install Python dependencies
-        run: |
-          python -m pip install -r requirements.txt # If you have a requirements.txt
+      #- name: Install Python dependencies
+      #  run: |
+      #    python -m pip install -r requirements.txt # If you have a requirements.txt
 
       - name: Render and Publish Quarto book
         run: quarto publish gh-pages --no-prompt # Publishes to the gh-pages branch
