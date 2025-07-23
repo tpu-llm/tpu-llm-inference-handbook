@@ -1,7 +1,3 @@
----
-title: "Part 1: the foundation"
----
-
 
 # **TPU LLM Inference \- Part 1: The foundations**
 

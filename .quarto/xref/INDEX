@@ -10,5 +10,8 @@
   },
   "references.qmd": {
     "references.html": "1bbf2b6a"
+  },
+  "01-intro-to-tpus.qmd": {
+    "01-intro-to-tpus.html": "df543e9e"
   }
 }
