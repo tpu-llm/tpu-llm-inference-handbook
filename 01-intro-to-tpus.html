@@ -2,14 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-99.9.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Gang Chen">
-<meta name="dcterms.date" content="2025-07-18">
 
-<title>tpu-llm-inference-handbook</title>
+<title>2&nbsp; TPU LLM Inference - Part 1: The foundations – tpu-llm-inference-handbook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,16 +31,18 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./summary.html" rel="next">
+<link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-3aa970819e70fbc78806154e5a1fcd28.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-2ed7bcc20bab3ab4cae13dea5cfda353.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-4c479992bb904f29b0e09e54a2e64e51.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -85,7 +85,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -101,7 +101,6 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -113,7 +112,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-title">Part 1: the foundation</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-intro-to-tpus.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><strong>TPU LLM Inference - Part 1: The foundations</strong></span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -123,10 +122,12 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">tpu-llm-inference-handbook</a> 
     </div>
@@ -140,12 +141,20 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Part 1: the foundation</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Summary</span></a>
+  <a href="./01-intro-to-tpus.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><strong>TPU LLM Inference - Part 1: The foundations</strong></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -156,56 +165,41 @@ window.Quarto = {
 </li>
     </ul>
     </div>
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#tpu-llm-inference---part-1-the-foundations" id="toc-tpu-llm-inference---part-1-the-foundations" class="nav-link active" data-scroll-target="#tpu-llm-inference---part-1-the-foundations"><strong>TPU LLM Inference - Part 1: The foundations</strong></a>
-  <ul class="collapse">
-  <li><a href="#from-simple-math-to-complex-ai-the-transformers-core" id="toc-from-simple-math-to-complex-ai-the-transformers-core" class="nav-link" data-scroll-target="#from-simple-math-to-complex-ai-the-transformers-core"><strong>From Simple Math to Complex AI: The Transformer’s Core</strong></a></li>
-  <li><a href="#the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference" id="toc-the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference" class="nav-link" data-scroll-target="#the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference"><strong>The Rhythmic Heart of AI: Why TPUs Excel at LLM Inference</strong></a></li>
-  <li><a href="#tpu-inference-stack" id="toc-tpu-inference-stack" class="nav-link" data-scroll-target="#tpu-inference-stack"><strong>TPU inference stack</strong></a></li>
-  <li><a href="#setup-the-tpu-inference-infrastructure" id="toc-setup-the-tpu-inference-infrastructure" class="nav-link" data-scroll-target="#setup-the-tpu-inference-infrastructure"><strong>Setup the TPU inference infrastructure</strong></a></li>
-  <li><a href="#the-tpu-performance-taste" id="toc-the-tpu-performance-taste" class="nav-link" data-scroll-target="#the-tpu-performance-taste"><strong>The TPU Performance Taste</strong></a>
-  <ul class="collapse">
-  <li><a href="#creating-the-tpu-vm" id="toc-creating-the-tpu-vm" class="nav-link" data-scroll-target="#creating-the-tpu-vm"><strong>Creating the TPU VM</strong></a></li>
-  <li><a href="#listening-to-the-heartbeat-cpu-vs.-tpu-showdown" id="toc-listening-to-the-heartbeat-cpu-vs.-tpu-showdown" class="nav-link" data-scroll-target="#listening-to-the-heartbeat-cpu-vs.-tpu-showdown"><strong>Listening to the Heartbeat: CPU vs.&nbsp;TPU Showdown</strong></a></li>
-  </ul></li>
-  <li><a href="#conclusion-the-first-pulse" id="toc-conclusion-the-first-pulse" class="nav-link" data-scroll-target="#conclusion-the-first-pulse"><strong>Conclusion: The First Pulse</strong></a></li>
-  <li><a href="#links-and-references" id="toc-links-and-references" class="nav-link" data-scroll-target="#links-and-references"><strong>Links and References</strong></a></li>
-  </ul></li>
-  </ul>
-</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#from-simple-math-to-complex-ai-the-transformers-core" id="toc-from-simple-math-to-complex-ai-the-transformers-core" class="nav-link active" data-scroll-target="#from-simple-math-to-complex-ai-the-transformers-core"><span class="header-section-number">2.1</span> <strong>From Simple Math to Complex AI: The Transformer’s Core</strong></a></li>
+  <li><a href="#the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference" id="toc-the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference" class="nav-link" data-scroll-target="#the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference"><span class="header-section-number">2.2</span> <strong>The Rhythmic Heart of AI: Why TPUs Excel at LLM Inference</strong></a></li>
+  <li><a href="#tpu-inference-stack" id="toc-tpu-inference-stack" class="nav-link" data-scroll-target="#tpu-inference-stack"><span class="header-section-number">2.3</span> <strong>TPU inference stack</strong></a></li>
+  <li><a href="#setup-the-tpu-inference-infrastructure" id="toc-setup-the-tpu-inference-infrastructure" class="nav-link" data-scroll-target="#setup-the-tpu-inference-infrastructure"><span class="header-section-number">2.4</span> <strong>Setup the TPU inference infrastructure</strong></a></li>
+  <li><a href="#the-tpu-performance-taste" id="toc-the-tpu-performance-taste" class="nav-link" data-scroll-target="#the-tpu-performance-taste"><span class="header-section-number">2.5</span> <strong>The TPU Performance Taste</strong></a>
+  <ul class="collapse">
+  <li><a href="#creating-the-tpu-vm" id="toc-creating-the-tpu-vm" class="nav-link" data-scroll-target="#creating-the-tpu-vm"><span class="header-section-number">2.5.1</span> <strong>Creating the TPU VM</strong></a></li>
+  <li><a href="#listening-to-the-heartbeat-cpu-vs.-tpu-showdown" id="toc-listening-to-the-heartbeat-cpu-vs.-tpu-showdown" class="nav-link" data-scroll-target="#listening-to-the-heartbeat-cpu-vs.-tpu-showdown"><span class="header-section-number">2.5.2</span> <strong>Listening to the Heartbeat: CPU vs.&nbsp;TPU Showdown</strong></a></li>
+  </ul></li>
+  <li><a href="#conclusion-the-first-pulse" id="toc-conclusion-the-first-pulse" class="nav-link" data-scroll-target="#conclusion-the-first-pulse"><span class="header-section-number">2.6</span> <strong>Conclusion: The First Pulse</strong></a></li>
+  <li><a href="#links-and-references" id="toc-links-and-references" class="nav-link" data-scroll-target="#links-and-references"><span class="header-section-number">2.7</span> <strong>Links and References</strong></a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content column-page-right" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">tpu-llm-inference-handbook</h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><strong>TPU LLM Inference - Part 1: The foundations</strong></span></h1>
 </div>
 
 
 
-<div class="quarto-title-meta column-page-right">
+<div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Gang Chen </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">July 18, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -215,8 +209,6 @@ window.Quarto = {
 </header>
 
 
-<section id="tpu-llm-inference---part-1-the-foundations" class="level1">
-<h1><strong>TPU LLM Inference - Part 1: The foundations</strong></h1>
 <p>Let’s start our journey with a simple, hands-on experiment. Before we dive into the complexities of the Large Language Model (LLM) and specialized accelerator hardware, let’s run a single piece of Python code. This script performs one of the most fundamental operations in computing: multiplying two matrices together.</p>
 <p>Save the following code as matrix_heartbeat_cpu.py on your local computer and run it from your terminal. You will need to have PyTorch installed (pip install torch).</p>
 <p>When you run this (python3 matrix_heartbeat_cpu.py), observe how long it takes to complete the task. It might take a few seconds. This simple calculation, this single computational “heartbeat,” is the key to understanding the immense power and challenge of running modern artificial intelligence.</p>
@@ -226,8 +218,8 @@ window.Quarto = {
 </li>
 <li><strong>Part 2 &amp; Beyond:</strong> Building on this foundation, the series will progress to deploying a full LLM (like Meta’s Llama 3), exploring advanced serving techniques with high-performance systems, and ultimately scaling our solution for production using Google Kubernetes Engine (GKE).</li>
 </ul>
-<section id="from-simple-math-to-complex-ai-the-transformers-core" class="level2">
-<h2 class="anchored" data-anchor-id="from-simple-math-to-complex-ai-the-transformers-core"><strong>From Simple Math to Complex AI: The Transformer’s Core</strong></h2>
+<section id="from-simple-math-to-complex-ai-the-transformers-core" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="from-simple-math-to-complex-ai-the-transformers-core"><span class="header-section-number">2.1</span> <strong>From Simple Math to Complex AI: The Transformer’s Core</strong></h2>
 <p>The script you just ran performed a single matrix multiplication. It may seem basic, but this exact mathematical operation, scaled up thousands of times and chained together in intricate layers, is the fundamental building block of the Transformer architecture. This architecture is the engine behind virtually all state-of-the-art LLMs.</p>
 <p>When an LLM generates text, it’s not “thinking” in a human sense. It is, at its core, executing a staggering number of matrix and vector computations. These operations occur in two key parts of every Transformer layer:</p>
 <ol type="1">
@@ -237,24 +229,24 @@ window.Quarto = {
 </ol>
 <p>An LLM with billions of parameters is, in essence, a vast collection of these matrix operations. Running inference—the process of generating a response from a trained model—requires executing these calculations as quickly and efficiently as possible. Your CPU can handle one multiplication, but to serve a real-world application, we need hardware specifically designed for this task.</p>
 </section>
-<section id="the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference" class="level2">
-<h2 class="anchored" data-anchor-id="the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference"><strong>The Rhythmic Heart of AI: Why TPUs Excel at LLM Inference</strong></h2>
+<section id="the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference"><span class="header-section-number">2.2</span> <strong>The Rhythmic Heart of AI: Why TPUs Excel at LLM Inference</strong></h2>
 <p>To truly appreciate why a developer should invest time in learning TPUs, it is essential to move beyond the simple statement “it’s fast” and delve into the architectural elegance that makes this speed possible. The advantage of the TPU is not just an incremental improvement; it is a paradigm shift in processing designed specifically for the mathematics of machine learning.</p>
 <p>Traditional processors, including Central Processing Units (CPUs) and Graphics Processing Units (GPUs), are built upon the von Neumann architecture. This model involves a processing unit that fetches instructions and data from a separate memory unit, performs a computation, and writes the result back to memory. An effective analogy is a chef (the processor) who must constantly run to a pantry (memory) to retrieve one ingredient at a time for each step of a recipe. This constant back-and-forth travel creates a significant performance limitation known as the “von Neumann bottleneck”. While GPUs dramatically increase performance by employing thousands of chefs working in parallel, they all still run to the same pantry, meaning memory access remains a fundamental constraint.</p>
 <p>The Tensor Processing Unit (TPU) was designed to solve this very problem for machine learning workloads. At its core is a component called the Matrix Multiply Unit (MXU), which contains a <strong>systolic array</strong>. This architecture represents a complete departure from the fetch-and-execute model. The term “systolic” is an analogy to the human circulatory system, where the heart pumps blood in a steady, rhythmic pulse. Similarly, in a TPU, data is not fetched from memory for each individual calculation. Instead, it is <em>pumped</em> rhythmically through a large, two-dimensional grid of simple processors.</p>
 <p>Each cell in the systolic array performs a simple multiply-accumulate (MAC) operation on the data it receives from an upstream neighbor, and then passes the partial result to its downstream neighbor in perfect time with a system clock. Weights are pre-loaded into the array, and input data flows through it in a wave. The final results of a massive matrix multiplication emerge from the array over time, with minimal need for the processors to access main memory during the computation itself. This “data-in-motion” paradigm effectively designs the memory bottleneck out of the most intensive part of the neural network calculation.</p>
 <p>Ultimately, these architectural advantages translate into a critical business metric: price-performance. For large-scale inference, faster computation means fewer accelerators are needed to serve the same number of users, which directly lowers operational costs. For any large and complex LLM, this efficiency is not a minor optimization; it is what makes serving it economically viable at scale. This proven cost-efficiency, rooted in the TPU’s long history of powering massive internal Google services like Search, Photos, and Translate, establishes it as a premier platform for deploying the next generation of machine learning models.</p>
 </section>
-<section id="tpu-inference-stack" class="level2">
-<h2 class="anchored" data-anchor-id="tpu-inference-stack"><strong>TPU inference stack</strong></h2>
+<section id="tpu-inference-stack" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="tpu-inference-stack"><span class="header-section-number">2.3</span> <strong>TPU inference stack</strong></h2>
 <p>Running large language models efficiently requires a full “stack” of technology where each layer is optimized to work with the one above it, as shown in the diagram below.</p>
 <p>![][image1]</p>
 <p>The foundation is the TPU designed specifically for the massive matrix calculations at the heart of AI. This powerful compute is connected by ultra-fast <strong>networking</strong> and paired with a flexible <strong>storage</strong> system. On top of this hardware runs the <strong>open software</strong> layer. This includes essential tools like <strong>Google Kubernetes Engine (GKE)</strong> and <strong>Compute Engine</strong> to manage the infrastructure, popular ML frameworks like <strong>JAX</strong> and <strong>PyTorch</strong> to build models, and the critical <strong>XLA compiler</strong> that translates framework code into highly efficient instructions for the TPUs.</p>
 <p>This integrated hardware and software environment is the perfect platform for running today’s most advanced <strong>Large Language Models</strong>, from Google’s <strong>Gemma</strong> to open models like <strong>Llama 3</strong> and <strong>DeepSeek</strong>. The final piece of the stack is the <strong>Inference Engine</strong>, such as <strong>JetStream</strong> or <strong>vLLm</strong>. This top-level software acts as a smart conductor, taking a trained model and serving it for real-world applications. It handles incoming user requests, manages memory, and optimizes the model’s execution to ensure maximum speed and throughput. Every layer in this stack works in harmony to make demanding AI inference fast, scalable, and efficient.</p>
 <p>For the purposes of this introductory guide, we will use the <strong>Cloud TPU VM</strong> to get a taste of TPU.</p>
 </section>
-<section id="setup-the-tpu-inference-infrastructure" class="level2">
-<h2 class="anchored" data-anchor-id="setup-the-tpu-inference-infrastructure"><strong>Setup the TPU inference infrastructure</strong></h2>
+<section id="setup-the-tpu-inference-infrastructure" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="setup-the-tpu-inference-infrastructure"><span class="header-section-number">2.4</span> <strong>Setup the TPU inference infrastructure</strong></h2>
 <p>This section provides a guide to setting up the necessary accounts, permissions, tools, and TPU.</p>
 <p>A Google Cloud project with billing enabled is the foundational requirement Please follow the <a href="https://cloud.google.com/tpu/docs/setup-gcp-account">official Google Cloud documentation</a> to prepare your Google Cloud environment. Make sure that the following tasks are completed:</p>
 <p><strong>Google Cloud Project Foundation:</strong></p>
@@ -280,11 +272,11 @@ window.Quarto = {
 <li><strong>Request quota increases</strong> for your specific <strong>TPU cores</strong> (e.g., v5e), <strong>IP addresses</strong>, <strong>Hyperdisk Balanced Capacity</strong>, and <strong>CPUs</strong> for the host VM. Plan for a 1-2 day approval time.</li>
 </ul>
 </section>
-<section id="the-tpu-performance-taste" class="level2">
-<h2 class="anchored" data-anchor-id="the-tpu-performance-taste"><strong>The TPU Performance Taste</strong></h2>
+<section id="the-tpu-performance-taste" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="the-tpu-performance-taste"><span class="header-section-number">2.5</span> <strong>The TPU Performance Taste</strong></h2>
 <p>With all the preparation complete, it is time for the main event: bringing the TPU VM to life and running our script again to see the performance difference firsthand.</p>
-<section id="creating-the-tpu-vm" class="level3">
-<h3 class="anchored" data-anchor-id="creating-the-tpu-vm"><strong>Creating the TPU VM</strong></h3>
+<section id="creating-the-tpu-vm" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="creating-the-tpu-vm"><span class="header-section-number">2.5.1</span> <strong>Creating the TPU VM</strong></h3>
 <p>You can provision TPU VM with automation tools like Terraform, Cloud APIs, Console UI or command line tool gcloud, which is the simplest approach for the handbook.</p>
 <p>The following command creates a TPU <a href="https://cloud.google.com/blog/products/compute/introducing-trillium-6th-gen-tpus?e=48754805">Trillium</a> v6e with 1 core (smallest TPU unit).</p>
 <p>Bash</p>
@@ -318,8 +310,8 @@ Bash<br>
 </ol>
 <p>(vm)$ pip install torch torch_xla[tpu] -f https://storage.googleapis.com/libtpu-releases/index.html</p>
 </section>
-<section id="listening-to-the-heartbeat-cpu-vs.-tpu-showdown" class="level3">
-<h3 class="anchored" data-anchor-id="listening-to-the-heartbeat-cpu-vs.-tpu-showdown"><strong>Listening to the Heartbeat: CPU vs.&nbsp;TPU Showdown</strong></h3>
+<section id="listening-to-the-heartbeat-cpu-vs.-tpu-showdown" class="level3" data-number="2.5.2">
+<h3 data-number="2.5.2" class="anchored" data-anchor-id="listening-to-the-heartbeat-cpu-vs.-tpu-showdown"><span class="header-section-number">2.5.2</span> <strong>Listening to the Heartbeat: CPU vs.&nbsp;TPU Showdown</strong></h3>
 <p>Now, we will run a slightly modified version of our original script. This version adds the necessary torch_xla code to ensure the computation runs on the TPU hardware.</p>
 <p>Create a file named matrix_heartbeat_tpu.py on the VM and paste the following code:</p>
 <p>Run the script from the VM’s terminal:</p>
@@ -330,16 +322,15 @@ Bash<br>
 <p>Now, compare the TPU execution time to the time you recorded from your local CPU. You should see a dramatic difference—what took seconds on a general-purpose CPU is completed in a fraction of a second on hardware purpose-built for this exact task. You have just witnessed the power of accelerated computing.</p>
 </section>
 </section>
-<section id="conclusion-the-first-pulse" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion-the-first-pulse"><strong>Conclusion: The First Pulse</strong></h2>
+<section id="conclusion-the-first-pulse" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="conclusion-the-first-pulse"><span class="header-section-number">2.6</span> <strong>Conclusion: The First Pulse</strong></h2>
 <p>This first stage of our journey has laid a critical foundation. We started with a simple action—a simple matrix multiplication—and used it as a lens to understand the computational core of modern AI. We have navigated the practical, and often treacherous, waters of cloud setup, paying close attention to the quota management that so often derails initial efforts. We have successfully provisioned a powerful piece of hardware and established communication with it.</p>
 <p>Most importantly, by running our “heartbeat” script on both a CPU and a TPU, we have a tangible, dramatic demonstration of the performance gains offered by specialized accelerators. The foundation is now firmly in place. In Part 2 of this series, we will build upon this knowledge to load and run a full-scale Large Language Model, turning this raw computational power into intelligent text generation.</p>
 </section>
-<section id="links-and-references" class="level2">
-<h2 class="anchored" data-anchor-id="links-and-references"><strong>Links and References</strong></h2>
+<section id="links-and-references" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="links-and-references"><span class="header-section-number">2.7</span> <strong>Links and References</strong></h2>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -742,12 +733,15 @@ Bash<br>
     }
   });
   </script>
-<nav class="page-navigation column-page-right">
+<nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Welcome">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./summary.html" class="pagination-link" aria-label="Summary">
-        <span class="nav-page-text"><span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
