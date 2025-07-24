@@ -4,13 +4,13 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   /* Increase the base font size. 1.1rem is 110% of the default. Adjust as needed. */
-  font-size: 1.15rem;
+  font-size: 1.1rem;
 
   /* Set a lighter font weight. 400 is normal, 300 is 'light'. */
   font-weight: 200;
 
   /* Increase the space between lines of text. 1.7 is a good value for readability. */
-  line-height: 1.7;
+  line-height: 1.66;
 }
 
 /* Headings often look better with slightly less line spacing than body text */
@@ -22,4 +22,19 @@ h1, h2, h3, h4, h5, h6 {
 /* This rule targets paragraphs and adds a tiny bit of space between words */
 p {
   word-spacing: 0.05rem;
+}
+
+/* Styling for the summary in both light and dark modes */
+details summary {
+  cursor: pointer; /* Indicates it's clickable */
+  color: #f0f0f0; /* Lighter text */
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out; /* Smooth transition on hover */
+}
+
+/* Hover effect */
+details summary:hover {
+  background-color: #555; /* Slightly lighter on hover in dark mode */
 }
