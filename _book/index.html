@@ -9,7 +9,7 @@
 <meta name="author" content="Gang Chen">
 <meta name="dcterms.date" content="2025-07-18">
 
-<title>tpu-llm-inference-handbook</title>
+<title>TPU LLM Inference Handbook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -72,35 +107,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -131,7 +137,7 @@ window.Quarto = {
       <a href="./index.html" class="sidebar-logo-link">
       </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">tpu-llm-inference-handbook</a> 
+      <a href="./">TPU LLM Inference Handbook</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -163,8 +169,7 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#tpu-llm-inference---part-1-the-foundations" id="toc-tpu-llm-inference---part-1-the-foundations" class="nav-link active" data-scroll-target="#tpu-llm-inference---part-1-the-foundations"><strong>TPU LLM Inference - Part 1: The foundations</strong></a>
-  <ul class="collapse">
+  <li><a href="#part-1-the-foundations" id="toc-part-1-the-foundations" class="nav-link active" data-scroll-target="#part-1-the-foundations"># <strong>Part 1: The foundations</strong></a></li>
   <li><a href="#from-simple-math-to-complex-ai-the-transformers-core" id="toc-from-simple-math-to-complex-ai-the-transformers-core" class="nav-link" data-scroll-target="#from-simple-math-to-complex-ai-the-transformers-core"><strong>From Simple Math to Complex AI: The Transformer’s Core</strong></a></li>
   <li><a href="#the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference" id="toc-the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference" class="nav-link" data-scroll-target="#the-rhythmic-heart-of-ai-why-tpus-excel-at-llm-inference"><strong>The Rhythmic Heart of AI: Why TPUs Excel at LLM Inference</strong></a></li>
   <li><a href="#tpu-inference-stack" id="toc-tpu-inference-stack" class="nav-link" data-scroll-target="#tpu-inference-stack"><strong>TPU inference stack</strong></a></li>
@@ -175,8 +180,6 @@ window.Quarto = {
   <li><a href="#listening-to-the-heartbeat-cpu-vs.-tpu-showdown" id="toc-listening-to-the-heartbeat-cpu-vs.-tpu-showdown" class="nav-link" data-scroll-target="#listening-to-the-heartbeat-cpu-vs.-tpu-showdown"><strong>Listening to the Heartbeat: CPU vs.&nbsp;TPU Showdown</strong></a></li>
   </ul></li>
   <li><a href="#conclusion-the-first-pulse" id="toc-conclusion-the-first-pulse" class="nav-link" data-scroll-target="#conclusion-the-first-pulse"><strong>Conclusion: The First Pulse</strong></a></li>
-  <li><a href="#links-and-references" id="toc-links-and-references" class="nav-link" data-scroll-target="#links-and-references"><strong>Links and References</strong></a></li>
-  </ul></li>
   </ul>
 </nav>
 </nav>
@@ -189,7 +192,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">tpu-llm-inference-handbook</h1>
+<h1 class="title">TPU LLM Inference Handbook</h1>
 </div>
 
 
@@ -218,17 +221,82 @@ window.Quarto = {
 </header>
 
 
-<section id="tpu-llm-inference---part-1-the-foundations" class="level1">
-<h1><strong>TPU LLM Inference - Part 1: The foundations</strong></h1>
+<section id="part-1-the-foundations" class="level2">
+<h2 class="anchored" data-anchor-id="part-1-the-foundations"># <strong>Part 1: The foundations</strong></h2>
 <p>Let’s start our journey with a simple, hands-on experiment. Before we dive into the complexities of the Large Language Model (LLM) and specialized accelerator hardware, let’s run a single piece of Python code. This script performs one of the most fundamental operations in computing: multiplying two matrices together.</p>
-<p>Save the following code as matrix_heartbeat_cpu.py on your local computer and run it from your terminal. You will need to have PyTorch installed (pip install torch).</p>
-<p>When you run this (python3 matrix_heartbeat_cpu.py), observe how long it takes to complete the task. It might take a few seconds. This simple calculation, this single computational “heartbeat,” is the key to understanding the immense power and challenge of running modern artificial intelligence.</p>
+<p>Review the following python program (also available in <a href="">source repo</a>).</p>
+<details>
+<summary>
+Click to see code
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Benchmark Configuration ---</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># BENCHMARK_ITERATIONS mimic the steady-state operation of </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># an inference server under a continuous load of user requests.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>BENCHMARK_ITERATIONS <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_matmul_on_cpu():</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set the device explicitly to CPU</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> torch.device(<span class="st">"cpu"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Using device: </span><span class="sc">{</span>device<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define matrix dimensions (conceptual for an LLM layer)</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># batch_size: number of input sequences processed in parallel</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># hidden_size: dimension of the hidden states (e.g., 4096, 8192)</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># intermediate_size: typically 4x hidden_size in Transformer FFNs</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    batch_size <span class="op">=</span> <span class="dv">128</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    hidden_size <span class="op">=</span> <span class="dv">4096</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    intermediate_size <span class="op">=</span> <span class="dv">16384</span> <span class="co"># 4 * hidden_size for FFN</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Simulating MatMul for LLM Feed-Forward Network:"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Batch size: </span><span class="sc">{</span>batch_size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Input features (hidden_size): </span><span class="sc">{</span>hidden_size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Output features (intermediate_size): </span><span class="sc">{</span>intermediate_size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create random input tensor and weight matrix on the CPU device</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Using float32 (standard float) for CPU computation</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    input_tensor <span class="op">=</span> torch.randn(batch_size, hidden_size, dtype<span class="op">=</span>torch.float32).to(device)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    weight_matrix <span class="op">=</span> torch.randn(hidden_size, intermediate_size, dtype<span class="op">=</span>torch.float32).to(device)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Input tensor shape: </span><span class="sc">{</span>input_tensor<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> (dtype: </span><span class="sc">{</span>input_tensor<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Weight matrix shape: </span><span class="sc">{</span>weight_matrix<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> (dtype: </span><span class="sc">{</span>weight_matrix<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- Benchmark Phase ---</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Performing </span><span class="sc">{</span>BENCHMARK_ITERATIONS<span class="sc">}</span><span class="ss"> benchmark iterations..."</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    start_time <span class="op">=</span> time.perf_counter()</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(BENCHMARK_ITERATIONS):</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        output_tensor <span class="op">=</span> torch.matmul(input_tensor, weight_matrix)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    end_time <span class="op">=</span> time.perf_counter()</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    total_time_ms <span class="op">=</span> (end_time <span class="op">-</span> start_time) <span class="op">*</span> <span class="dv">1000</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">--- Results ---"</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Total time for </span><span class="sc">{</span>BENCHMARK_ITERATIONS<span class="sc">}</span><span class="ss"> iterations: </span><span class="sc">{</span>total_time_ms<span class="sc">:.4f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Average time per iteration: </span><span class="sc">{</span>total_time_ms <span class="op">/</span> BENCHMARK_ITERATIONS<span class="sc">:.4f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Clean up (optional)</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">del</span> input_tensor, weight_matrix, output_tensor</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"--- Matrix Multiplication Benchmark (CPU) ---"</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>        run_matmul_on_cpu()</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"An error occurred: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Please ensure you have PyTorch installed to run this code."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This simple calculation, a batch of computational “heartbeats” is the key to understanding the immense power and challenge of running modern artificial intelligence.</p>
+<p>Run this program locally (You will need to have python installed and configured).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install torch</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> matrix_heartbeat_cpu.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Observe how long it takes to complete the task. It might take an average of ~30 - 50ms milliseconds per iteration on a modern laptop.</p>
 <p>This guide is the first in a series dedicated to harnessing the power of Google’s Tensor Processing Units (TPUs) for inference. We will build our understanding from the ground up, moving from architectural theory to practical, hands-on application.</p>
 <ul>
 <li><strong>Part 1 (This Post):</strong> The journey begins with the fundamentals. We will explore <em>the TPU inference architecture</em>, set up a Google Cloud environment, provision our first TPU Virtual Machine (VM), and re-run our “heartbeat” script to witness a dramatic acceleration.<br>
 </li>
 <li><strong>Part 2 &amp; Beyond:</strong> Building on this foundation, the series will progress to deploying a full LLM (like Meta’s Llama 3), exploring advanced serving techniques with high-performance systems, and ultimately scaling our solution for production using Google Kubernetes Engine (GKE).</li>
 </ul>
+</details></section>
 <section id="from-simple-math-to-complex-ai-the-transformers-core" class="level2">
 <h2 class="anchored" data-anchor-id="from-simple-math-to-complex-ai-the-transformers-core"><strong>From Simple Math to Complex AI: The Transformer’s Core</strong></h2>
 <p>The script you just ran performed a single matrix multiplication. It may seem basic, but this exact mathematical operation, scaled up thousands of times and chained together in intricate layers, is the fundamental building block of the Transformer architecture. This architecture is the engine behind virtually all state-of-the-art LLMs.</p>
@@ -251,9 +319,13 @@ window.Quarto = {
 <section id="tpu-inference-stack" class="level2">
 <h2 class="anchored" data-anchor-id="tpu-inference-stack"><strong>TPU inference stack</strong></h2>
 <p>Running large language models efficiently requires a full “stack” of technology where each layer is optimized to work with the one above it, as shown in the diagram below.</p>
-<p>![][image1]</p>
-<p>The foundation is the TPU designed specifically for the massive matrix calculations at the heart of AI. This powerful compute is connected by ultra-fast <strong>networking</strong> and paired with a flexible <strong>storage</strong> system. On top of this hardware runs the <strong>open software</strong> layer. This includes essential tools like <strong>Google Kubernetes Engine (GKE)</strong> and <strong>Compute Engine</strong> to manage the infrastructure, popular ML frameworks like <strong>JAX</strong> and <strong>PyTorch</strong> to build models, and the critical <strong>XLA compiler</strong> that translates framework code into highly efficient instructions for the TPUs.</p>
-<p>This integrated hardware and software environment is the perfect platform for running today’s most advanced <strong>Large Language Models</strong>, from Google’s <strong>Gemma</strong> to open models like <strong>Llama 3</strong> and <strong>DeepSeek</strong>. The final piece of the stack is the <strong>Inference Engine</strong>, such as <strong>JetStream</strong> or <strong>vLLm</strong>. This top-level software acts as a smart conductor, taking a trained model and serving it for real-world applications. It handles incoming user requests, manages memory, and optimizes the model’s execution to ensure maximum speed and throughput. Every layer in this stack works in harmony to make demanding AI inference fast, scalable, and efficient.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tpu_inference_stack.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+<p>The foundation is the TPU designed specifically for the massive matrix calculations at the heart of AI. This powerful compute is connected by ultra-fast <strong>networking</strong> and paired with a flexible <strong>storage</strong> system. On top of this hardware runs the open software layer. This includes essential tools like <strong>Google Kubernetes Engine (GKE)</strong> and <strong>Compute Engine</strong> to manage the infrastructure, popular ML frameworks like <strong>JAX</strong> and <strong>PyTorch</strong> to build models, and the critical <strong>XLA compiler</strong> that translates framework code into highly efficient instructions for the TPUs.</p>
+<p>This integrated hardware and software environment is the perfect platform for running today’s most advanced <strong>Large Language Models</strong>, from Google’s <strong>Gemma</strong> to open models like <strong>Llama</strong> and <strong>DeepSeek</strong>. The final piece of the stack is the <strong>Inference Engine</strong>, such as <strong>JetStream</strong> or <strong>vLLm</strong>. This top-level software acts as a smart conductor, taking a trained model and serving it for real-world applications. It handles incoming user requests, manages memory, and optimizes the model’s execution to ensure maximum speed and throughput. Every layer in this stack works in harmony to make demanding AI inference fast, scalable, and efficient.</p>
 <p>For the purposes of this introductory guide, we will use the <strong>Cloud TPU VM</strong> to get a taste of TPU.</p>
 </section>
 <section id="setup-the-tpu-inference-infrastructure" class="level2">
@@ -262,25 +334,25 @@ window.Quarto = {
 <p>A Google Cloud project with billing enabled is the foundational requirement Please follow the <a href="https://cloud.google.com/tpu/docs/setup-gcp-account">official Google Cloud documentation</a> to prepare your Google Cloud environment. Make sure that the following tasks are completed:</p>
 <p><strong>Google Cloud Project Foundation:</strong></p>
 <ul>
-<li>Create or pick a <strong>Google Cloud Project</strong>.<br>
+<li>Create or pick a Google Cloud Project.<br>
 </li>
-<li><strong>Enable billing</strong> for that project.<br>
+<li>Enable billing for that project.<br>
 </li>
-<li><strong>Install</strong> and <strong>configure</strong> the <code>gcloud</code> CLI.<br>
+<li>Install and configure the gcloud CLI.<br>
 </li>
-<li><strong>Activate</strong> the <code>tpu.googleapis.com</code> API.</li>
+<li>Activate the <strong>tpu.googleapis.com</strong> API.</li>
 </ul>
 <p><strong>Permissions &amp; Service Accounts:</strong></p>
 <ul>
-<li>Ensure your user account has <strong><code>Service Account Admin</code></strong>, <strong><code>Project IAM Admin</code></strong>, and <strong><code>TPU Admin</code></strong> roles.<br>
+<li>Ensure your user account has <strong>Service Account Admin</strong>, <strong>Project IAM Admin</strong>, and <strong>TPU Admin</strong> roles.<br>
 </li>
-<li><strong>Create</strong> a Cloud TPU Service Agent.<br>
+<li>Create a Cloud TPU Service Agent.<br>
 </li>
-<li><strong>Create</strong> a dedicated, user-managed <strong>TPU Service Account</strong> with appropriate roles (e.g., <code>TPU Admin</code>, <code>Storage Admin</code>).</li>
+<li>Create a dedicated, user-managed TPU Service Account with appropriate roles (e.g., TPU Admin, Storage Admin).</li>
 </ul>
 <p><strong>Quota Management (Crucial!):</strong></p>
 <ul>
-<li><strong>Request quota increases</strong> for your specific <strong>TPU cores</strong> (e.g., v5e), <strong>IP addresses</strong>, <strong>Hyperdisk Balanced Capacity</strong>, and <strong>CPUs</strong> for the host VM. Plan for a 1-2 day approval time.</li>
+<li>Request quota increases for your specific TPU cores (e.g., v6e), IP addresses, Hyperdisk Balanced Capacity, and CPUs for the host VM. Plan for a 1-2 day approval time.</li>
 </ul>
 </section>
 <section id="the-tpu-performance-taste" class="level2">
@@ -290,59 +362,140 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="creating-the-tpu-vm"><strong>Creating the TPU VM</strong></h3>
 <p>You can provision TPU VM with automation tools like Terraform, Cloud APIs, Console UI or command line tool gcloud, which is the simplest approach for the handbook.</p>
 <p>The following command creates a TPU <a href="https://cloud.google.com/blog/products/compute/introducing-trillium-6th-gen-tpus?e=48754805">Trillium</a> v6e with 1 core (smallest TPU unit).</p>
-<p>Bash</p>
-<p># Set environment variables for clarity<br>
-<code>export PROJECT_ID=your-project-id</code><br>
-export TPU_NAME=llm-tpu-vm<br>
-export ZONE=us-east5-a<br>
-export ACCELERATOR_TYPE=v6e-1<br>
-export RUNTIME_VERSION=v2-alpha-tpuv6e</p>
-<p># The command to create the TPU VM<br>
-gcloud compute tpus tpu-vm create <span class="math inline">\(TPU\_NAME \\
-  –project=\)</span>PROJECT_ID \<br>
---zone=<span class="math inline">\(ZONE \\
-  \--accelerator-type=\)</span>ACCELERATOR_TYPE \<br>
---version=$RUNTIME_VERSION</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set environment variables for clarity  </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PROJECT_ID</span><span class="op">=</span>your-project-id<span class="kw">`</span>  </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">TPU</span><span class="dt">\_</span>NAME=llm-tpu-vm  </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ZONE</span><span class="op">=</span>us-central1-b  </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ACCELERATOR</span><span class="dt">\_</span>TYPE=v6e-1  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">RUNTIME</span><span class="dt">\_</span>VERSION=v2-alpha-tpuv6e</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># The command to create the TPU VM  </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> compute tpus tpu-vm create <span class="va">$TPU</span><span class="dt">\_</span>NAME <span class="dt">\\</span>  </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">–project=</span><span class="va">$PROJECT</span><span class="ex">\_ID</span> <span class="dt">\\</span>  </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="ex">\--zone=</span><span class="va">$ZONE</span> <span class="dt">\\</span>  </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">\--accelerator-type=</span><span class="va">$ACCELERATOR</span><span class="ex">\_TYPE</span> <span class="dt">\\</span>  </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="ex">\--version=</span><span class="va">$RUNTIME</span><span class="ex">\_VERSION</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Once TPU VM is provisioned, you can validate the status by running command:</p>
 <p>gcloud compute tpus tpu-vm list --zone=$ZONE<br>
-Look for the <strong><code>STATUS</code></strong> column for your TPU VM’s name, and make sure it is in READY state</p>
+Look for the <strong>STATUS</strong> column for your TPU VM’s name, and make sure it is in READY state</p>
 <p>Now you can connect to it and install the necessary Python libraries.</p>
 <ol type="1">
-<li><p><strong>SSH into the VM:</strong> Use the gcloud command to establish a secure shell connection.<br>
-Bash</p>
-<p><code>gcloud compute tpus tpu-vm ssh $TPU_NAME \</code><br>
-<code>--project=$PROJECT_ID \</code><br>
-<code>--zone=$ZONE</code></p>
+<li><p><strong>SSH into the VM:</strong> Use the gcloud command to establish a secure shell connection.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> compute tpus tpu-vm ssh <span class="va">$TPU_NAME</span> <span class="dt">\ </span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">--project=</span><span class="va">$PROJECT_ID</span> <span class="dt">\ </span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">--zone=</span><span class="va">$ZONE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This command places the user in a terminal on the TPU host machine.</p></li>
-<li><p><strong>Install PyTorch/XLA:</strong> Inside the VM, install the PyTorch libraries that are specifically compiled to work with TPUs via the XLA compiler. Using the -f flag to point to the Google Storage release index is crucial for getting the correct, compatible versions.<br>
-Bash<br>
-(vm)$ sudo apt-get update &amp;&amp; sudo apt-get install libopenblas-dev -y<br>
-(vm)$ pip install numpy</p></li>
+<li><p><strong>Install PyTorch/XLA:</strong> Inside the VM, install the PyTorch libraries that are specifically compiled to work with TPUs via the XLA compiler. Using the -f flag to point to the Google Storage release index is crucial for getting the correct, compatible versions.</p></li>
 </ol>
-<p>(vm)$ pip install torch torch_xla[tpu] -f https://storage.googleapis.com/libtpu-releases/index.html</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">vm</span><span class="kw">)</span><span class="ex">$</span> sudo apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install libopenblas-dev <span class="at">-y</span>   </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">vm</span><span class="kw">)</span><span class="ex">$</span> pip install numpy </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">vm</span><span class="kw">)</span><span class="ex">$</span> pip install torch torch_xla<span class="pp">[</span><span class="ss">tpu</span><span class="pp">]</span> <span class="at">-f</span> https://storage.googleapis.com/libtpu-releases/index.html</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="listening-to-the-heartbeat-cpu-vs.-tpu-showdown" class="level3">
 <h3 class="anchored" data-anchor-id="listening-to-the-heartbeat-cpu-vs.-tpu-showdown"><strong>Listening to the Heartbeat: CPU vs.&nbsp;TPU Showdown</strong></h3>
 <p>Now, we will run a slightly modified version of our original script. This version adds the necessary torch_xla code to ensure the computation runs on the TPU hardware.</p>
-<p>Create a file named matrix_heartbeat_tpu.py on the VM and paste the following code:</p>
-<p>Run the script from the VM’s terminal:</p>
-<p>Bash</p>
-<p>(vm)$ python3 matrix_heartbeat_tpu.py</p>
+<details>
+<summary>
+Click to see code
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch_xla</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch_xla.core.xla_model <span class="im">as</span> xm</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_matmul_on_tpu():</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set the device to TPU</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> xm.xla_device()</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Using device: </span><span class="sc">{</span>device<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define matrix dimensions (conceptual for an LLM layer)</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># batch_size: number of input sequences processed in parallel</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># hidden_size: dimension of the hidden states (e.g., 4096, 8192)</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># intermediate_size: typically 4x hidden_size in Transformer FFNs</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    batch_size <span class="op">=</span> <span class="dv">128</span>  <span class="co"># Reduced batch size due to TPU memory constraints. You can increase if needed.</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    hidden_size <span class="op">=</span> <span class="dv">4096</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    intermediate_size <span class="op">=</span> <span class="dv">16384</span> <span class="co"># 4 * hidden_size for FFN</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Simulating MatMul for LLM Feed-Forward Network:"</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Batch size: </span><span class="sc">{</span>batch_size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Hidden size: </span><span class="sc">{</span>hidden_size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Intermediate size: </span><span class="sc">{</span>intermediate_size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create random input tensor and weight matrix on the TPU device</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Using bfloat16 (lower precision) for faster TPU computation</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Note: For using bfloat16, ensure your PyTorch version is &gt;= 1.10 and XLA version is compatible.</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    input_tensor <span class="op">=</span> torch.randn(batch_size, hidden_size, dtype<span class="op">=</span>torch.float32).to(device)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    weight_matrix <span class="op">=</span> torch.randn(hidden_size, intermediate_size, dtype<span class="op">=</span>torch.float32).to(device)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Input tensor shape: </span><span class="sc">{</span>input_tensor<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> (dtype: </span><span class="sc">{</span>input_tensor<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Weight matrix shape: </span><span class="sc">{</span>weight_matrix<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> (dtype: </span><span class="sc">{</span>weight_matrix<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert tensors to bfloat16 if possible</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">hasattr</span>(torch, <span class="st">'bfloat16'</span>) <span class="kw">and</span> torch.cuda.is_available():  <span class="co"># Check for bfloat16 and CUDA availability for now</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        input_tensor <span class="op">=</span> input_tensor.to(torch.bfloat16)</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>        weight_matrix <span class="op">=</span> weight_matrix.to(torch.bfloat16)</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Using bfloat16 for computation"</span>)</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Input tensor shape: </span><span class="sc">{</span>input_tensor<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> (dtype: </span><span class="sc">{</span>input_tensor<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Weight matrix shape: </span><span class="sc">{</span>weight_matrix<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> (dtype: </span><span class="sc">{</span>weight_matrix<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Perform the matrix multiplication</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Performing matrix multiplication (input @ weight_matrix)..."</span>)</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    start_time <span class="op">=</span> time.perf_counter()</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    output_tensor <span class="op">=</span> torch.matmul(input_tensor, weight_matrix)</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    xm.mark_step() <span class="co"># Ensure that all devices have completed executing the operation</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    end_time <span class="op">=</span> time.perf_counter()</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Output tensor shape: </span><span class="sc">{</span>output_tensor<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Computation time: </span><span class="sc">{</span>(end_time <span class="op">-</span> start_time) <span class="op">*</span> <span class="dv">1000</span><span class="sc">:.4f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Move output tensor to CPU for further processing/inspection if needed</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>    output_tensor <span class="op">=</span> output_tensor.cpu()</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Clean up (optional)</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">del</span> input_tensor, weight_matrix, output_tensor</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"--- Matrix Multiplication Benchmark (TPU) ---"</span>)</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>        run_matmul_on_tpu()</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"An error occurred: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Please ensure you have PyTorch and Torch_XLA installed to run this code and you are running in a TPU environment."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run the script (or use the git repo code/matrix_heartbeat_tpu.py) from the TPU VM’s terminal:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">vm</span><span class="kw">)</span><span class="ex">$</span> python matrix_heartbeat_tpu.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The expected output should look similar to this:</p>
+<pre><code>--- Results ---
+Total time for 100 iterations: 3881.3409 ms
+Average time per iteration: 38.8134 ms</code></pre>
 <p>The key indicator of success is seeing the device listed as xla:0 (or another number). This confirms that the tensors were created on the TPU and the computation was executed there.</p>
+<pre><code>--- Matrix Multiplication Benchmark (TPU) ---
+Using device: xla:0</code></pre>
+<p>However, you may notice that average time per iteration is probably just several times faster than running on CPU, what happened?!</p>
+<p>The reason is due to two main factors: JIT Compilation Overhead, the XLA (Accelerated Linear Algebra) compiler performs a one-time, Just-In-Time (JIT) compilation and Data Transfer, the tensors first have to be moved from the host CPU’s memory over the PCIe bus to the TPU’s own High-Bandwidth Memory (HBM). TPUs are designed for sustained, high-throughput workloads, not single, short tasks. The real power becomes evident when you run the same compiled graph many times. The initial compilation cost is paid only once, and then every subsequent execution is incredibly fast. Let’s add the following warm-up iteration to the TPU program (add it right before the <strong># — Benchmark Phase — </strong>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- Warm-up Phase (triggers XLA compilation) ---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    WARMUP_ITERATIONS <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Performing </span><span class="sc">{</span>WARMUP_ITERATIONS<span class="sc">}</span><span class="ss"> warm-up iterations..."</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(WARMUP_ITERATIONS):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        _ <span class="op">=</span> torch.matmul(input_tensor, weight_matrix)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    xm.mark_step() <span class="co"># Wait for all warm-up iterations to complete</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now, compare the TPU execution time to the time you recorded from your local CPU. You should see a dramatic difference—what took seconds on a general-purpose CPU is completed in a fraction of a second on hardware purpose-built for this exact task. You have just witnessed the power of accelerated computing.</p>
-</section>
+<p>Result from v6e-1 for 100 batch:</p>
+<pre><code>--- Results ---
+Total time for 100 iterations: 0.5619 ms
+Average time per iteration: 0.0056 ms</code></pre>
+</details></section>
 </section>
 <section id="conclusion-the-first-pulse" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion-the-first-pulse"><strong>Conclusion: The First Pulse</strong></h2>
 <p>This first stage of our journey has laid a critical foundation. We started with a simple action—a simple matrix multiplication—and used it as a lens to understand the computational core of modern AI. We have navigated the practical, and often treacherous, waters of cloud setup, paying close attention to the quota management that so often derails initial efforts. We have successfully provisioned a powerful piece of hardware and established communication with it.</p>
 <p>Most importantly, by running our “heartbeat” script on both a CPU and a TPU, we have a tangible, dramatic demonstration of the performance gains offered by specialized accelerators. The foundation is now firmly in place. In Part 2 of this series, we will build upon this knowledge to load and run a full-scale Large Language Model, turning this raw computational power into intelligent text generation.</p>
-</section>
-<section id="links-and-references" class="level2">
-<h2 class="anchored" data-anchor-id="links-and-references"><strong>Links and References</strong></h2>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

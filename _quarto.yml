@@ -2,7 +2,7 @@ project:
   type: book
 
 book:
-  title: "tpu-llm-inference-handbook"
+  title: "TPU LLM Inference Handbook"
   author: "Gang Chen"
   date: "7/18/2025"
   chapters:
@@ -15,6 +15,7 @@ bibliography: references.bib
 format:
   html:
     css: styles.css
+    code-fold: true
     page-layout: full
     theme:
       - darkly
