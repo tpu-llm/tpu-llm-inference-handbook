@@ -3,12 +3,12 @@ title: "Part 1: the foundation"
 ---
 
 
-# **Part 1: The foundations**
+**Part 1: The foundations**
 ---
 
 Let's start our journey with a simple, hands-on experiment. Before we dive into the complexities of the Large Language Model (LLM) and specialized accelerator hardware, let's run a single piece of Python code. This script performs one of the most fundamental operations in computing: multiplying two matrices together.
 
-Review the following python program (also available in [source repo]()). 
+Review the following python program (also available in [source repo](https://github.com/tpu-llm/tpu-llm-inference-handbook/blob/main/code/matrix_heartbeat_cpu.py)). 
 
 <details>
 <summary>Click to see code</summary>
@@ -71,6 +71,7 @@ if __name__ == "__main__":
         print("Please ensure you have PyTorch installed to run this code.")
 
 ```
+</details>
 
 This simple calculation, a batch of computational "heartbeats" is the key to understanding the immense power and challenge of running modern artificial intelligence.
 
@@ -119,15 +120,15 @@ Running large language models efficiently requires a full "stack" of technology 
 
 The foundation is the TPU designed specifically for the massive matrix calculations at the heart of AI. This powerful compute is connected by ultra-fast **networking** and paired with a flexible **storage** system. On top of this hardware runs the open software layer. This includes essential tools like **Google Kubernetes Engine (GKE)** and **Compute Engine** to manage the infrastructure, popular ML frameworks like **JAX** and **PyTorch** to build models, and the critical **XLA compiler** that translates framework code into highly efficient instructions for the TPUs.
 
-This integrated hardware and software environment is the perfect platform for running today's most advanced **Large Language Models**, from Google's **Gemma** to open models like **Llama** and **DeepSeek**. The final piece of the stack is the **Inference Engine**, such as **JetStream** or **vLLm**. This top-level software acts as a smart conductor, taking a trained model and serving it for real-world applications. It handles incoming user requests, manages memory, and optimizes the model's execution to ensure maximum speed and throughput. Every layer in this stack works in harmony to make demanding AI inference fast, scalable, and efficient.
+This integrated platform hosts the **Large Language Models**, from Google's **Gemma** to other models like **Llama** and **DeepSeek**. The final piece of the stack is the **Inference Engine**, such as **JetStream** or **vLLm**. This top-level software acts as a smart conductor, taking a trained model and serving it for real-world applications. It handles incoming user requests, manages memory, and optimizes the model's execution to ensure maximum speed and throughput. Every layer in this stack works in harmony to make demanding AI inference fast, scalable, and efficient.
 
-For the purposes of this introductory guide, we will use the **Cloud TPU VM** to get a taste of TPU.
+For the purposes of this introductory guide, we will use the **Cloud TPU VM** (Compute Engine) to get a taste of TPU.
 
 ## **Setup the TPU inference infrastructure**
 
 This section provides a guide to setting up the necessary accounts, permissions, tools, and TPU.
 
-A Google Cloud project with billing enabled is the foundational requirement Please follow the [official Google Cloud documentation](https://cloud.google.com/tpu/docs/setup-gcp-account) to prepare your Google Cloud environment. Make sure that the following tasks are completed:
+You will need a Google Cloud Project with billing enabled. Please follow the [official Google Cloud documentation](https://cloud.google.com/tpu/docs/setup-gcp-account) to prepare your Google Cloud environment. Make sure that the following tasks are completed:
 
 **Google Cloud Project Foundation:**
 
@@ -148,34 +149,33 @@ A Google Cloud project with billing enabled is the foundational requirement Plea
 
 ## **The TPU Performance Taste**
 
-With all the preparation complete, it is time for the main event: bringing the TPU VM to life and running our script again to see the performance difference firsthand.
-
-### **Creating the TPU VM**
+With all the preparation complete, it is time to provision an TPU VM and runn our script again to see the performance difference firsthand.
 
 You can provision TPU VM with automation tools like Terraform, Cloud APIs, Console UI or command line tool gcloud, which is the simplest approach for the handbook. 
 
-The following command creates a TPU [Trillium](https://cloud.google.com/blog/products/compute/introducing-trillium-6th-gen-tpus?e=48754805) v6e with 1 core (smallest TPU unit). 
+The following command creates a TPU [Trillium v6e](https://cloud.google.com/blog/products/compute/introducing-trillium-6th-gen-tpus?e=48754805) with 1 core (smallest TPU unit). Note: Set the ZONE to an GCP zone with proper TPU quota configured.
 
 ```bash
-
 # Set environment variables for clarity  
-export PROJECT_ID=your-project-id`  
-export TPU\_NAME=llm-tpu-vm  
+export PROJECT_ID=your-project-id  
+export TPU_NAME=llm-tpu-vm  
 export ZONE=us-central1-b  
-export ACCELERATOR\_TYPE=v6e-1  
-export RUNTIME\_VERSION=v2-alpha-tpuv6e
+export ACCELERATOR_TYPE=v6e-1  
+export RUNTIME_VERSION=v2-alpha-tpuv6e
 
 # The command to create the TPU VM  
-gcloud compute tpus tpu-vm create $TPU\_NAME \\  
-  –project=$PROJECT\_ID \\  
-  \--zone=$ZONE \\  
-  \--accelerator-type=$ACCELERATOR\_TYPE \\  
-  \--version=$RUNTIME\_VERSION 
+gcloud compute tpus tpu-vm create $TPU_NAME \  
+  –project=$PROJECT_ID \  
+  --zone=$ZONE \  
+  --accelerator-type=$ACCELERATOR_TYPE \  
+  --version=$RUNTIME_VERSION 
 ```
 
 Once TPU VM is provisioned, you can validate the status by running command:
 
-gcloud compute tpus tpu-vm list \--zone=$ZONE  
+```bash
+gcloud compute tpus tpu-vm list --zone=$ZONE  
+```
 Look for the **STATUS** column for your TPU VM's name, and make sure it is in READY state
 
 Now you can connect to it and install the necessary Python libraries.
@@ -191,18 +191,18 @@ Now you can connect to it and install the necessary Python libraries.
 
    This command places the user in a terminal on the TPU host machine.
 
-2. **Install PyTorch/XLA:** Inside the VM, install the PyTorch libraries that are specifically compiled to work with TPUs via the XLA compiler. Using the \-f flag to point to the Google Storage release index is crucial for getting the correct, compatible versions.  
+2. **Install PyTorch/XLA:** Inside the VM, install the PyTorch libraries that are specifically compiled to work with TPUs via the XLA compiler. Using the \-f flag to point to the Google Storage release index.  
    
 ```bash  
 
-(vm)$ sudo apt-get update && sudo apt-get install libopenblas-dev -y   
-(vm)$ pip install numpy 
-(vm)$ pip install torch torch_xla[tpu] -f https://storage.googleapis.com/libtpu-releases/index.html
+sudo apt-get update && sudo apt-get install libopenblas-dev -y   
+pip install numpy 
+pip install torch torch_xla[tpu] -f https://storage.googleapis.com/libtpu-releases/index.html
 ```
 
-### **Listening to the Heartbeat: CPU vs. TPU Showdown**
+Now, we will run a slightly modified version of our original script. This version adds the necessary torch\_xla code to ensure the computation runs on the TPU hardware. 
 
-Now, we will run a slightly modified version of our original script. This version adds the necessary torch\_xla code to ensure the computation runs on the TPU hardware.
+The original script is modified to use TPU to run the matrix calculation:
 
 <details>
 <summary>Click to see code</summary>
@@ -211,6 +211,9 @@ import torch
 import time
 import torch_xla
 import torch_xla.core.xla_model as xm
+
+# --- Benchmark Configuration ---
+BENCHMARK_ITERATIONS = 100
 
 def run_matmul_on_tpu():
     # Set the device to TPU
@@ -221,7 +224,7 @@ def run_matmul_on_tpu():
     # batch_size: number of input sequences processed in parallel
     # hidden_size: dimension of the hidden states (e.g., 4096, 8192)
     # intermediate_size: typically 4x hidden_size in Transformer FFNs
-    batch_size = 128  # Reduced batch size due to TPU memory constraints. You can increase if needed.
+    batch_size = 128 # Set to match CPU for fair comparison. Can be lowered if OOM.
     hidden_size = 4096
     intermediate_size = 16384 # 4 * hidden_size for FFN
 
@@ -231,34 +234,24 @@ def run_matmul_on_tpu():
     print(f"  Intermediate size: {intermediate_size}")
 
     # Create random input tensor and weight matrix on the TPU device
-    # Using bfloat16 (lower precision) for faster TPU computation
-    # Note: For using bfloat16, ensure your PyTorch version is >= 1.10 and XLA version is compatible.
     input_tensor = torch.randn(batch_size, hidden_size, dtype=torch.float32).to(device)
     weight_matrix = torch.randn(hidden_size, intermediate_size, dtype=torch.float32).to(device)
 
     print(f"\nInput tensor shape: {input_tensor.shape} (dtype: {input_tensor.dtype})")
     print(f"Weight matrix shape: {weight_matrix.shape} (dtype: {weight_matrix.dtype})")
 
-    # Convert tensors to bfloat16 if possible
-    if hasattr(torch, 'bfloat16') and torch.cuda.is_available():  # Check for bfloat16 and CUDA availability for now
-        input_tensor = input_tensor.to(torch.bfloat16)
-        weight_matrix = weight_matrix.to(torch.bfloat16)
-        print("Using bfloat16 for computation")
-        print(f"\nInput tensor shape: {input_tensor.shape} (dtype: {input_tensor.dtype})")
-        print(f"Weight matrix shape: {weight_matrix.shape} (dtype: {weight_matrix.dtype})")
-
-
-    # Perform the matrix multiplication
-    print("\nPerforming matrix multiplication (input @ weight_matrix)...")
+    # --- Benchmark Phase ---
+    print(f"Performing {BENCHMARK_ITERATIONS} benchmark iterations...")
     start_time = time.perf_counter()
-    output_tensor = torch.matmul(input_tensor, weight_matrix)
-    xm.mark_step() # Ensure that all devices have completed executing the operation
-
+    for _ in range(BENCHMARK_ITERATIONS):
+        output_tensor = torch.matmul(input_tensor, weight_matrix)
+    xm.mark_step() # Ensure all benchmark operations are complete before stopping timer
     end_time = time.perf_counter()
+    total_time_ms = (end_time - start_time) * 1000
 
-    print(f"Output tensor shape: {output_tensor.shape}")
-    print(f"Computation time: {(end_time - start_time) * 1000:.4f} ms")
-
+    print(f"\n--- Results ---")
+    print(f"Total time for {BENCHMARK_ITERATIONS} iterations: {total_time_ms:.4f} ms")
+    print(f"Average time per iteration: {total_time_ms / BENCHMARK_ITERATIONS:.4f} ms")
     # Move output tensor to CPU for further processing/inspection if needed
     output_tensor = output_tensor.cpu()
 
@@ -272,27 +265,35 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"An error occurred: {e}")
         print("Please ensure you have PyTorch and Torch_XLA installed to run this code and you are running in a TPU environment.")
-```
 
-Run the script (or use the git repo code/matrix_heartbeat_tpu.py) from the TPU VM's terminal:
+```
+</details>
+
+Run the script (or use the [sample code](https://github.com/tpu-llm/tpu-llm-inference-handbook/blob/main/code/matrix_heartbeat_tpu.py) from repo) from the TPU VM's terminal:
 
 ```bash
-(vm)$ python matrix_heartbeat_tpu.py
+python matrix_heartbeat_tpu.py
 ```
 
-The expected output should look similar to this:
-```
+The script output should look similar to this:
+```bash
+--- Matrix Multiplication Benchmark (TPU) ---
+Using device: xla:0
+Simulating MatMul for LLM Feed-Forward Network:
+  Batch size: 128
+  Hidden size: 4096
+  Intermediate size: 16384
+
+Input tensor shape: torch.Size([128, 4096]) (dtype: torch.float32)
+Weight matrix shape: torch.Size([4096, 16384]) (dtype: torch.float32)
+Performing 100 benchmark iterations...
+
 --- Results ---
-Total time for 100 iterations: 3881.3409 ms
-Average time per iteration: 38.8134 ms
+Total time for 100 iterations: 383.0780 ms
+Average time per iteration: 3.8308 ms
 ```
 
 The key indicator of success is seeing the device listed as xla:0 (or another number). This confirms that the tensors were created on the TPU and the computation was executed there.
-
-```
---- Matrix Multiplication Benchmark (TPU) ---
-Using device: xla:0
-```
 
 However, you may notice that average time per iteration is probably just several times faster than running on CPU, what happened?!
 
@@ -308,10 +309,10 @@ Let's add the following warm-up iteration to the TPU program (add it right befor
     xm.mark_step() # Wait for all warm-up iterations to complete
 ```
 
-Now, compare the TPU execution time to the time you recorded from your local CPU. You should see a dramatic difference—what took seconds on a general-purpose CPU is completed in a fraction of a second on hardware purpose-built for this exact task. You have just witnessed the power of accelerated computing.
+Now, compare the TPU execution time to the time you recorded from your local CPU. You should see a dramatic difference — what took 30ms on a general-purpose CPU is completed in a fraction of a millisecond on hardware purpose-built for this exact task. You have just witnessed the power of accelerated computing.
 
 Result from v6e-1 for 100 batch:
-```
+```bash
 --- Results ---
 Total time for 100 iterations: 0.5619 ms
 Average time per iteration: 0.0056 ms
@@ -319,6 +320,6 @@ Average time per iteration: 0.0056 ms
 
 ## **Conclusion: The First Pulse**
 
-This first stage of our journey has laid a critical foundation. We started with a simple action—a simple matrix multiplication—and used it as a lens to understand the computational core of modern AI. We have navigated the practical, and often treacherous, waters of cloud setup, paying close attention to the quota management that so often derails initial efforts. We have successfully provisioned a powerful piece of hardware and established communication with it.
+This first stage of our journey has laid a critical foundation. We started with a simple matrix multiplication, and used it as a lens to understand the computational core of modern AI. We have navigated the practical Gogole Cloud setup, and successfully provisioned a TPU VM and established communication with it.
 
 Most importantly, by running our "heartbeat" script on both a CPU and a TPU, we have a tangible, dramatic demonstration of the performance gains offered by specialized accelerators. The foundation is now firmly in place. In Part 2 of this series, we will build upon this knowledge to load and run a full-scale Large Language Model, turning this raw computational power into intelligent text generation.

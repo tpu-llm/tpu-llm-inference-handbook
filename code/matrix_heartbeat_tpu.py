@@ -25,8 +25,6 @@ def run_matmul_on_tpu():
     print(f"  Intermediate size: {intermediate_size}")
 
     # Create random input tensor and weight matrix on the TPU device
-    # Using bfloat16 (lower precision) for faster TPU computation
-    # Note: For using bfloat16, ensure your PyTorch version is >= 1.10 and XLA version is compatible.
     input_tensor = torch.randn(batch_size, hidden_size, dtype=torch.float32).to(device)
     weight_matrix = torch.randn(hidden_size, intermediate_size, dtype=torch.float32).to(device)
 
