@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>References – TPU LLM Inference Handbook</title>
+<title>Part 3: Scaling Llama on GKE with JetStream – TPU LLM Inference Handbook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,26 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -49,7 +30,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./05-production-and-cost.html" rel="prev">
+<link href="./04-vllm-inference.html" rel="next">
+<link href="./02-llama-jetstream-inference.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -102,7 +84,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./references.html">References</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-scaling-gke-jetstream.html"><span class="chapter-title">Part 3: Scaling Llama on GKE with JetStream</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -136,12 +118,12 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-llama3-jetstream-inference.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 2: Llama3 Inference with JetStream</span></a>
+  <a href="./02-llama-jetstream-inference.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 2: Llama Inference with JetStream</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-scaling-gke-jetstream.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 3: Scaling Llama3 on GKE with JetStream</span></a>
+  <a href="./03-scaling-gke-jetstream.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Part 3: Scaling Llama on GKE with JetStream</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -156,7 +138,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link active">
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
@@ -173,7 +155,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">References</h1>
+<h1 class="title"><span class="chapter-title">Part 3: Scaling Llama on GKE with JetStream</span></h1>
 </div>
 
 
@@ -190,9 +172,6 @@ div.csl-indent {
 </header>
 
 
-<div id="refs" role="list" style="display: none">
-
-</div>
 
 
 
@@ -598,11 +577,14 @@ div.csl-indent {
   </script>
 <nav class="page-navigation column-page-right">
   <div class="nav-page nav-page-previous">
-      <a href="./05-production-and-cost.html" class="pagination-link" aria-label="Part 5: Production Readiness and Cost Optimization">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Part 5: Production Readiness and Cost Optimization</span></span>
+      <a href="./02-llama-jetstream-inference.html" class="pagination-link" aria-label="Part 2: Llama Inference with JetStream">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Part 2: Llama Inference with JetStream</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./04-vllm-inference.html" class="pagination-link" aria-label="Part 4: Inference with vLLm">
+        <span class="nav-page-text"><span class="chapter-title">Part 4: Inference with vLLm</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

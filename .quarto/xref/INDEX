@@ -13,5 +13,20 @@
   },
   "01-intro-to-tpus.qmd": {
     "01-intro-to-tpus.html": "df543e9e"
+  },
+  "02-llama3-jetstream-inference.qmd": {
+    "02-llama3-jetstream-inference.html": "67d34691"
+  },
+  "03-scaling-gke-jetstream.qmd": {
+    "03-scaling-gke-jetstream.html": "fe4a821d"
+  },
+  "04-vllm-inference.qmd": {
+    "04-vllm-inference.html": "53cf6046"
+  },
+  "05-production-and-cost.qmd": {
+    "05-production-and-cost.html": "2fe37aec"
+  },
+  "02-llama-jetstream-inference.qmd": {
+    "02-llama-jetstream-inference.html": "f8e73ff3"
   }
 }
