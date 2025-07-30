@@ -38,3 +38,11 @@ details summary {
 details summary:hover {
   background-color: #555; /* Slightly lighter on hover in dark mode */
 }
+
+/* Custom styles for the hero image on the title page */
+#hero-image {
+  width: 100%; /* Make the image span the full width of the content area */
+  height: 30vh; /* Set height to 30% of the viewport height for a banner effect */
+  object-fit: cover; /* Scale the image to cover the area, cropping as needed to avoid distortion */
+  object-position: center; /* Center the image within its frame */
+}

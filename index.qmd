@@ -6,6 +6,8 @@ title: "Part 1: the foundation"
 **Part 1: The foundations**
 ---
 
+![](images/tpu_llm_handbook.jpeg){#hero-image}
+
 Let's start our journey with a simple, hands-on experiment. Before we dive into the complexities of the Large Language Model (LLM) and specialized accelerator hardware, let's run a single piece of Python code. This script performs one of the most fundamental operations in computing: multiplying two matrices together.
 
 Review the following python program (also available in [source repo](https://github.com/tpu-llm/tpu-llm-inference-handbook/blob/main/code/matrix_heartbeat_cpu.py)). 
