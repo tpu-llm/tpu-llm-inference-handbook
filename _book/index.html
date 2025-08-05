@@ -67,7 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./02-llama-jetstream-inference.html" rel="next">
+<link href="./02-llama-vllm-inference.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -154,22 +154,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-llama-jetstream-inference.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 2: Llama Inference with JetStream</span></a>
+  <a href="./02-llama-vllm-inference.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 2: Llama Inference with vLLM</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-scaling-gke-jetstream.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 3: Scaling Llama on GKE with JetStream</span></a>
+  <a href="./03-scaling-gke-vllm.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 3: Scaling Llama on GKE with vLLM</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-vllm-inference.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 4: Inference with vLLm</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./05-production-and-cost.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 5: Production Readiness and Cost Optimization</span></a>
+  <a href="./05-production-and-cost.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Part 4: Production Readiness and Cost Optimization</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -338,7 +333,7 @@ Click to see code
 </figure>
 </div>
 <p>The foundation is the TPU designed specifically for the massive matrix calculations at the heart of AI. This powerful compute is connected by ultra-fast <strong>networking</strong> and paired with a flexible <strong>storage</strong> system. On top of this hardware runs the open software layer. This includes essential tools like <strong>Google Kubernetes Engine (GKE)</strong> and <strong>Compute Engine</strong> to manage the infrastructure, popular ML frameworks like <strong>JAX</strong> and <strong>PyTorch</strong> to build models, and the critical <strong>XLA compiler</strong> that translates framework code into highly efficient instructions for the TPUs.</p>
-<p>This integrated platform hosts the <strong>Large Language Models</strong>, from Google’s <strong>Gemma</strong> to other models like <strong>Llama</strong> and <strong>DeepSeek</strong>. The final piece of the stack is the <strong>Inference Engine</strong>, such as <strong>JetStream</strong> or <strong>vLLm</strong>. This top-level software acts as a smart conductor, taking a trained model and serving it for real-world applications. It handles incoming user requests, manages memory, and optimizes the model’s execution to ensure maximum speed and throughput. Every layer in this stack works in harmony to make demanding AI inference fast, scalable, and efficient.</p>
+<p>This integrated platform hosts the <strong>Large Language Models</strong>, from Google’s <strong>Gemma</strong> to other models like <strong>Llama</strong> and <strong>DeepSeek</strong>. The final piece of the stack is the <strong>Inference Engine</strong>, such as <strong>vLLM</strong>. This top-level software acts as a smart conductor, taking a trained model and serving it for real-world applications. It handles incoming user requests, manages memory, and optimizes the model’s execution to ensure maximum speed and throughput. Every layer in this stack works in harmony to make demanding AI inference fast, scalable, and efficient.</p>
 <p>For the purposes of this introductory guide, we will use the <strong>Cloud TPU VM</strong> (Compute Engine) to get a taste of TPU.</p>
 </section>
 <section id="setup-the-tpu-inference-infrastructure" class="level2">
@@ -912,8 +907,8 @@ Click to see code
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./02-llama-jetstream-inference.html" class="pagination-link" aria-label="Part 2: Llama Inference with JetStream">
-        <span class="nav-page-text"><span class="chapter-title">Part 2: Llama Inference with JetStream</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./02-llama-vllm-inference.html" class="pagination-link" aria-label="Part 2: Llama Inference with vLLM">
+        <span class="nav-page-text"><span class="chapter-title">Part 2: Llama Inference with vLLM</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -28,5 +28,11 @@
   },
   "02-llama-jetstream-inference.qmd": {
     "02-llama-jetstream-inference.html": "f8e73ff3"
+  },
+  "02-llama-vllm-inference.qmd": {
+    "02-llama-vllm-inference.html": "90c7d4d0"
+  },
+  "03-scaling-gke-vllm.qmd": {
+    "03-scaling-gke-vllm.html": "0f368cca"
   }
 }

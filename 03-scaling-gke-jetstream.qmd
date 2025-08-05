@@ -1,3 +1,0 @@
----
-title: "Part 3: Scaling Llama on GKE with JetStream"
----

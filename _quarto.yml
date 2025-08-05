@@ -7,9 +7,8 @@ book:
   date: "7/18/2025"
   chapters:
     - index.qmd
-    - 02-llama-jetstream-inference.qmd
-    - 03-scaling-gke-jetstream.qmd
-    - 04-vllm-inference.qmd
+    - 02-llama-vllm-inference.qmd
+    - 03-scaling-gke-vllm.qmd
     - 05-production-and-cost.qmd
     - references.qmd
         
